@@ -20,7 +20,10 @@ public class html {
         try (BufferedReader reader = new BufferedReader(new FileReader("/Users/azuga/Desktop/weather1.csv"))) {
             String currentLine;
             while ((currentLine = reader.readLine()) != null) {
-                lines.add(currentLine);
+
+                String s = currentLine.replace("//cdn.weatherapi.com","<img src=https://cdn.weatherapi.com/");
+                String s1 = s.replace("png","png style=\"width:50px;height:50px;\"");
+                lines.add(s1);
             }
         } catch (IOException e) {
             e.printStackTrace();
