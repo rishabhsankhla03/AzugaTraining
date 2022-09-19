@@ -30,10 +30,12 @@ public class CsvtoPdf {
         // Initiating making the PDF documents
 
         Document pdfdata = new Document();
+        Rectangle rc = new Rectangle(6000f,5300f);
+        pdfdata.setPageSize(rc);
         PdfWriter.getInstance(pdfdata, new FileOutputStream("/Users/azuga/Desktop/weather.pdf"));
 
         pdfdata.open(); //method to open the file
-        PdfPTable my_first_table = new PdfPTable(15); //number of columns in pdf
+        PdfPTable my_first_table = new PdfPTable(43); //number of columns in pdf
         PdfPCell table_cell;
 
 
