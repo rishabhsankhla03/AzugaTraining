@@ -10,10 +10,17 @@ package com.training.day1;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.XML;
+import org.w3c.dom.Node;
+import org.w3c.dom.bootstrap.DOMImplementationRegistry;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSSerializer;
+import org.xml.sax.InputSource;
 
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -38,7 +45,7 @@ public class weatherxml {
 
 
 
-            FileWriter file = new FileWriter("/Users/azuga/Desktop/weatherxml.txt");
+            FileWriter file = new FileWriter("/Users/azuga/Desktop/weatherxml1.xml");
             file.write("");
             for(int i=0;i< arr.length;i++) {
                 if(i==0) {
@@ -59,7 +66,7 @@ public class weatherxml {
 //
                 }
             }
-            System.out.println("Your XML data is successfully written into XMLData.txt");
+            System.out.println("Your XML data is successfully written into XMLData.xml");
             // close FileWriter
             file.close();
 
@@ -69,17 +76,39 @@ public class weatherxml {
             e1.printStackTrace();
         }
     }
+    public static String format(String xml) {
 
-    // create convertToXML() method for converting JSOn data into XML
-    public static String convertToXML(String jsonString, String root) throws JSONException, FileNotFoundException {    // handle JSONException
-//            InputStream is = new FileInputStream("/Users/azuga/Desktop/weather.json");
-//            JSONTokener tokener = new JSONTokener(is);
-//            JSONArray jsonArray = new JSONArray(tokener);
-//            StringBuilder csv = new StringBuilder();
-//            csv.append(CDL.toString(jsonArray));
+        try {
+            final InputSource src = new InputSource(new StringReader(xml));
+            final Node document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(src).getDocumentElement();
+            final Boolean keepDeclaration = xml.startsWith("<?xml");
+
+            //May need this: System.setProperty(DOMImplementationRegistry.PROPERTY,"com.sun.org.apache.xerces.internal.dom.DOMImplementationSourceImpl");
+
+
+            final DOMImplementationRegistry registry = DOMImplementationRegistry.newInstance();
+            final DOMImplementationLS impl = (DOMImplementationLS) registry.getDOMImplementation("LS");
+            final LSSerializer writer = impl.createLSSerializer();
+
+            writer.getDomConfig().setParameter("format-pretty-print", Boolean.TRUE); // Set this to true if the output needs to be beautified.
+            writer.getDomConfig().setParameter("xml-declaration", keepDeclaration); // Set this to true if the declaration is needed to be outputted.
+
+            return writer.writeToString(document);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * method for converting JSOn data into XML
+     * @param jsonString-json string as input
+     * @param root -root element for xml
+     * @return - returns xml as a string
+     * @throws JSONException - to handle syntax error of json string
+     */
+    public static String convertToXML(String jsonString, String root) throws JSONException {    // handle JSONException
         JSONObject jsonObject =new JSONObject(jsonString);
-        // pass the XML data to the main() method
-        return "<?xml version=\"1.0\" encoding=\"ISO-8859-15\"?>\n<"+root+">" + XML.toString(jsonObject) + "</"+root+">";
-
+        String unformattedXml =  "<"+root+">" + XML.toString(jsonObject) + "</"+root+">";
+        return format(unformattedXml);
     }
 }
