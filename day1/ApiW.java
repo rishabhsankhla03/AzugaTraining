@@ -39,8 +39,8 @@ public class ApiW {
         for(int i=0;i< city.length;i++) {
 
             //"city" string array that will take all the given city names
-
-            var url = "http://api.weatherapi.com/v1/current.json?key=bd4fc916e20c46f886b05941221309&q=" + city[i] + "&aqi=yes";
+            var url = "http://api.weatherapi.com/v1/current.json?key=2d14c37a9ef84ef6ab980624221809&q=" + city[i] + "&aqi=yes";
+//            var url = "http://api.weatherapi.com/v1/current.json?key=bd4fc916e20c46f886b05941221309&q=" + city[i] + "&aqi=yes";
 
             /**
              * sending reequest to server
@@ -62,7 +62,14 @@ public class ApiW {
             sb3= sb4.replace("}", "");
             sting.append("{");
             sting.append(sb3);
-            sting.append("},");
+//            sting.append("},");
+
+            if (i== city.length-1) {
+                sting.append("}");
+            }
+            else {
+                sting.append("},");
+            }
 
             // making a json file.
         }
